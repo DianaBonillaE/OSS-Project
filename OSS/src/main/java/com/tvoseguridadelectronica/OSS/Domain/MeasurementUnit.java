@@ -2,7 +2,7 @@ package com.tvoseguridadelectronica.OSS.Domain;
 
 public class MeasurementUnit {
 
-    private  int id;
+    private int id;
     private String name;
 
     public MeasurementUnit() {
