@@ -42,35 +42,26 @@ public class InventoryCategoryDao {
         }
     }
 
-    public InventoryCategory insert(InventoryCategory productCategory)throws SQLException{
+    public InventoryCategory insert(InventoryCategory inventoryCategory)throws SQLException{
 
         Connection connection = dataSource.getConnection();
         String sqlInsert = "{call OSS_Category_Insert (?,?)}";
 
         CallableStatement statement =connection.prepareCall(sqlInsert);
         statement.registerOutParameter(1, Types.INTEGER);
-        statement.setString(2, productCategory.getName());
+        statement.setString(2, inventoryCategory.getName());
 
         statement.execute();
         statement.close();
         connection.close();
 
-        return productCategory;
+        return inventoryCategory;
     }
 
     public List<InventoryCategory> findAll(){
         String consulta ="select * from Inventory_category";
         return this.jdbcTemplate.query(consulta, new CategoryRowMapper());
 
-    }
-
-    public InventoryCategory findByName(int inventoryCategoryName){
-
-        String sqlProcedure = "{call OSS_Inventory_Category_FindByName (?)}";
-
-        InventoryCategory inventoryCategory= this.jdbcTemplate.queryForObject(sqlProcedure,new CategoryRowMapper(),inventoryCategoryName);
-
-        return inventoryCategory;
     }
 
     public void update (InventoryCategory inventoryCategory) {
@@ -95,6 +86,15 @@ public class InventoryCategoryDao {
         statement.execute();
         statement.close();
         connection.close();
+    }
+
+    public InventoryCategory findById(int inventoryCategoryId){
+
+        String sqlProcedure = "{call OSS_Inventory_Category_FindById (?)}";
+
+        InventoryCategory productCategory= this.jdbcTemplate.queryForObject(sqlProcedure,new CategoryRowMapper(), inventoryCategoryId);
+
+        return productCategory;
     }
 
 }
