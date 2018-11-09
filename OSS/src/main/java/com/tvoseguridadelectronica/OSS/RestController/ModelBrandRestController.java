@@ -19,12 +19,12 @@ public class ModelBrandRestController {
     @Autowired
     public void setModelBrandDao(ModelBrandDao modelBrandDao) { this.modelBrandDao = modelBrandDao; }
 
-   /* @GetMapping("/")
-    public ResponseEntity<List<ProductCategory>> listAllCategories(){
-        List<ProductCategory> categories = categoryDao.findAll();
-        return new ResponseEntity<List<ProductCategory>>(categories, HttpStatus.OK);
+    @GetMapping("/")
+    public ResponseEntity<List<ModelBrand>> listAllModelBrand(){
+        List<ModelBrand> modelBrand = modelBrandDao.findAll();
+        return new ResponseEntity<List<ModelBrand>>(modelBrand, HttpStatus.OK);
     }
-
+/*
     @GetMapping("/lista")
     public ResponseEntity<List<ProductCategory>> listAllCategoriesNotProduct(){
         List<ProductCategory> categories = categoryDao.findNotProduct();
@@ -50,15 +50,16 @@ public class ModelBrandRestController {
         return new ResponseEntity<ModelBrand>(modelBrandCreate,HttpStatus.CREATED);
     }
 
-    @PutMapping(value="/{id}")
-    public ResponseEntity<ModelBrand> updateModelBrand(@PathVariable ("id") final Integer id, @RequestBody  final ModelBrand modelBrand){
-        System.out.println( id+ "  "+modelBrand.getBrand());
-        ModelBrand modelBrandActual = modelBrandDao.findById(id);
-        modelBrandActual.setModel(modelBrand.getModel());
-        modelBrandActual.setBrand(modelBrand.getBrand());
-        modelBrandDao.update(modelBrandActual);
+    @PutMapping(value="/updateModelBrand")
+    public ResponseEntity<ModelBrand> updateModelBrand(@RequestBody  final ModelBrand modelBrand){
+        ModelBrand modelBrandUpdate= null;
+        try {
+            modelBrandDao.update(modelBrand);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-        return new ResponseEntity<ProductCategory>( productCategory,HttpStatus.OK);
+        return new ResponseEntity<ModelBrand>( modelBrandUpdate,HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}")

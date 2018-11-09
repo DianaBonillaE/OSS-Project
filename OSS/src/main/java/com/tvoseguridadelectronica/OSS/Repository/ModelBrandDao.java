@@ -75,16 +75,21 @@ public class ModelBrandDao {
         return productCategory;
     }*/
 
-    public void update (ModelBrand modelBrand) {
+    public ModelBrand update (ModelBrand modelBrand) throws SQLException{
+        Connection connection = dataSource.getConnection();
+        String sqlUpdate = "{call OSS_Model_Brand_Update (?,?,?)}";
 
-        simpleJdbcCall.withProcedureName("OSS_Model_Brand_Update");
-        Map<String,Object> inParamMap = new HashMap<String,Object>();
-        inParamMap.put("id", modelBrand.getId());
-        inParamMap.put("model", modelBrand.getModel());
-        inParamMap.put("brand", modelBrand.getBrand());
-        SqlParameterSource in = new MapSqlParameterSource(inParamMap);
-        simpleJdbcCall.execute(in);
+        CallableStatement statement = connection.prepareCall(sqlUpdate);
+        //statement.registerOutParameter(1, Types.INTEGER);
+        statement.setInt(1,modelBrand.getId());
+        statement.setString(2, modelBrand.getModel());
+        statement.setString(3, modelBrand.getBrand());
 
+        statement.execute();
+        statement.close();
+        connection.close();
+
+        return modelBrand;
     }
 
     public void delete(int modelBrandId)throws SQLException{
