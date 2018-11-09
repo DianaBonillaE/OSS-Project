@@ -29,31 +29,31 @@ public class MeasurementUnitDao {
 
         Connection connection = dataSource.getConnection();
         String sqlInsert = "{call OSS_MeasurementUnit_Insert (?,?)}";
-        CallableStatement statement =connection.prepareCall(sqlInsert);
+        CallableStatement statement = connection.prepareCall(sqlInsert);
         statement.registerOutParameter(1, Types.INTEGER);
-        statement.setString(2,measurementUnit.getName());
+        statement.setString(2, measurementUnit.getName());
         statement.execute();
-        int id=statement.getInt("measurement_unit_id");
+        int id = statement.getInt("measurement_unit_id");
         statement.close();
         connection.close();
         return id;
     }
 
-    public List<MeasurementUnit> find(String name){
+    public List<MeasurementUnit> find(String name) {
 
-        String sqlProcedure = "execute OSS_MeasurementUnit_Find '%"+name+"%'";
-        return this.jdbcTemplate.query(sqlProcedure,new MeasurementUnitRowMapper());
+        String sqlProcedure = "execute OSS_MeasurementUnit_Find '%" + name + "%'";
+        return this.jdbcTemplate.query(sqlProcedure, new MeasurementUnitRowMapper());
     }
 
-    public MeasurementUnit findById(int id){
+    public MeasurementUnit findById(int id) {
 
-        String sqlProcedure = "execute OSS_MeasurementUnit_FindById "+id;
-        MeasurementUnit measurementUnit= this.jdbcTemplate.queryForObject(sqlProcedure,new MeasurementUnitRowMapper());
+        String sqlProcedure = "execute OSS_MeasurementUnit_FindById " + id;
+        MeasurementUnit measurementUnit = this.jdbcTemplate.queryForObject(sqlProcedure, new MeasurementUnitRowMapper());
         return measurementUnit;
 
     }
 
-    public void updateMeasurementUnit(int id, String name)throws SQLException{
+    public void updateMeasurementUnit(int id, String name) throws SQLException {
 
         Connection connection = dataSource.getConnection();
         String sqlUpdate = "{call OSS_MeasurementUnit_Update (?,?)}";
@@ -66,17 +66,17 @@ public class MeasurementUnitDao {
         connection.close();
     }
 
-    public List<MeasurementUnit> getAll(){
+    public List<MeasurementUnit> getAll() {
         String sqlProcedure = "execute OSS_MeasurementUnit_GetAll";
-        return this.jdbcTemplate.query(sqlProcedure,new MeasurementUnitRowMapper());
+        return this.jdbcTemplate.query(sqlProcedure, new MeasurementUnitRowMapper());
     }
 
-    public void deleteMeasurementUnit(int id)throws SQLException{
+    public void deleteMeasurementUnit(int id) throws SQLException {
 
         Connection connection = dataSource.getConnection();
         String sqlDelete = "{call OSS_MeasurementUnit_Delete (?)}";
 
-        CallableStatement statement =connection.prepareCall(sqlDelete);
+        CallableStatement statement = connection.prepareCall(sqlDelete);
         statement.setInt(1, id);
 
         statement.execute();
@@ -91,7 +91,7 @@ public class MeasurementUnitDao {
             MeasurementUnit measurementUnit = new MeasurementUnit();
             measurementUnit.setId(resultSet.getInt("id"));
             measurementUnit.setName(resultSet.getString("name"));
-          return measurementUnit;
+            return measurementUnit;
         }
     }
 
