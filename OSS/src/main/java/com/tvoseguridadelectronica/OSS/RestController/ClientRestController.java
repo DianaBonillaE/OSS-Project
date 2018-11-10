@@ -48,11 +48,7 @@ public class ClientRestController {
     public ResponseEntity<Client> updateClient(@RequestBody final Client client){
 
         Client clientActual = null;
-        try{
-            clientDao.updateClient(client);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        clientDao.updateClient(client);
         return new ResponseEntity<Client>( clientActual,HttpStatus.OK);
     }
 

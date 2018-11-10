@@ -17,7 +17,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.tvoseguridadelectronica.OSS.Domain.Device;
 
@@ -80,8 +79,13 @@ public class DeviceDao {
 	}
 	
 	public void deleteDevice(String id) throws SQLException{
+		SqlParameterSource parameterSource= new MapSqlParameterSource()
+				.addValue("id",id);			
+		
+		simpleJdbcCall.setProcedureName("Oss_Device_Delete");
+		simpleJdbcCall.execute(parameterSource);
 
-		String procedure = "execute Oss_Device_Delete @id='"+id+"'";
+			
 		
 	}
 	
