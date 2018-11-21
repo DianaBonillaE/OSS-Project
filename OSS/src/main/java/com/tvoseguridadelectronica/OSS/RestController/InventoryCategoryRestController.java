@@ -4,23 +4,22 @@ import com.tvoseguridadelectronica.OSS.Domain.InventoryCategory;
 import com.tvoseguridadelectronica.OSS.Repository.InventoryCategoryDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.List;
 
-//@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
 @RestController
 @RequestMapping("/api/inventoryCategory")
 public class InventoryCategoryRestController {
 
+	@Autowired
     private InventoryCategoryDao inventorycategoryDao;
 
-    @Autowired
-    public void setInventoryCategoryDao(InventoryCategoryDao inventorycategoryDao) {
-        this.inventorycategoryDao = inventorycategoryDao;
-    }
+   
 
     @GetMapping("/")
     public ResponseEntity<List<InventoryCategory>> listAllCategories(){
@@ -28,7 +27,7 @@ public class InventoryCategoryRestController {
         return new ResponseEntity<List<InventoryCategory>>(categories,HttpStatus.OK);
     }
 
-    @PostMapping(value="/insert")
+    @PostMapping(value="/insert", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<InventoryCategory> createInventoryCategory(@RequestBody  InventoryCategory inventorycategory){
 
         InventoryCategory inventorycategoryCreate= null;

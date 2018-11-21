@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.SQLException;
 import java.util.List;
 
-//@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600) //direccion de angular
+@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600) //direccion de angular
 @RestController
 @RequestMapping({"/api/measurementunit"})
 public class MeasurementUnitRestController {

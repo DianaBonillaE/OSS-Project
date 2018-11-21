@@ -28,4 +28,11 @@ public class InventoryCategory {
     public void setName(String name) {
         this.name = name;
     }
+
+	@Override
+	public String toString() {
+		return "InventoryCategory [id=" + id + ", name=" + name + "]";
+	}
+    
+    
 }

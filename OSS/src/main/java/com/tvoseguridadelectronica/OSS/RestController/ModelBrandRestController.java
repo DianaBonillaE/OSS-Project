@@ -1,6 +1,5 @@
 package com.tvoseguridadelectronica.OSS.RestController;
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import com.tvoseguridadelectronica.OSS.Domain.ModelBrand;
 import com.tvoseguridadelectronica.OSS.Repository.ModelBrandDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.List;
-//@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
+
+@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
 @RestController
 @RequestMapping("/api/modelbrand")
 public class ModelBrandRestController {
