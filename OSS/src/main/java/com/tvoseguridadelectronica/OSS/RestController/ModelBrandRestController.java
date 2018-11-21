@@ -44,6 +44,7 @@ public class ModelBrandRestController {
 
         try {
             modelBrandDao.insert(modelBrand);
+            System.out.println(modelBrandCreate);
         } catch (SQLException e) {
             e.printStackTrace();
         }
