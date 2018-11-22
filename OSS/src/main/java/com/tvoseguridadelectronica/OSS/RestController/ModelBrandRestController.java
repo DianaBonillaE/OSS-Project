@@ -24,18 +24,13 @@ public class ModelBrandRestController {
         List<ModelBrand> modelBrand = modelBrandDao.findAll();
         return new ResponseEntity<List<ModelBrand>>(modelBrand, HttpStatus.OK);
     }
-/*
-    @GetMapping("/lista")
-    public ResponseEntity<List<ProductCategory>> listAllCategoriesNotProduct(){
-        List<ProductCategory> categories = categoryDao.findNotProduct();
-        return new ResponseEntity<List<ProductCategory>>(categories,HttpStatus.OK);
-    }
 
-    @GetMapping("/{productCategoryId}")
-    public ResponseEntity<ProductCategory> productCategoryById(@PathVariable("productCategoryId") final Integer id){
-        ProductCategory productCategory = categoryDao.findById(id);
-        return new ResponseEntity<ProductCategory>(productCategory, HttpStatus.OK);
-    }*/
+
+    @GetMapping("/{modelBrandId}")
+    public ResponseEntity<ModelBrand> modelBrandGetById(@PathVariable("modelBrandId") final Integer id){
+        ModelBrand modelBrand = modelBrandDao.findById(id);
+        return new ResponseEntity<ModelBrand>(modelBrand, HttpStatus.OK);
+    }
 
     @PostMapping(value="/insertModelBrand")
     public ResponseEntity<ModelBrand> createModelBrand(@RequestBody final ModelBrand modelBrand){

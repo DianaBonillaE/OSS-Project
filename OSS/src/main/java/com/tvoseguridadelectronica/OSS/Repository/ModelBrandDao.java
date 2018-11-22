@@ -66,14 +66,14 @@ public class ModelBrandDao {
         return modelBrand;
     }
 
-  /*  public ProductCategory findById(int productCategoryId){
+   public ModelBrand findById(int modelBrandId){
 
-        String sqlProcedure = "{call Panaris_Product_Category_FindById (?)}";
+        String sqlProcedure = "execute OSS_Model_Brand_FindById " + modelBrandId;
 
-        ProductCategory productCategory= this.jdbcTemplate.queryForObject(sqlProcedure,new CategoryRowMapper(),productCategoryId);
+        ModelBrand modelBrand= this.jdbcTemplate.queryForObject(sqlProcedure,new ModelBrandRowMapper());
 
-        return productCategory;
-    }*/
+        return modelBrand;
+    }
 
     public ModelBrand update (ModelBrand modelBrand) throws SQLException{
         Connection connection = dataSource.getConnection();
