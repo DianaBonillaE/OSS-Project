@@ -63,16 +63,22 @@ public class ClientDao {
         return client;
     }
 
-    public void updateClient(Client client){
+    public Client updateClient(Client client) throws SQLException{
 
-        simpleJdbCall.withProcedureName("OSS_CLIENT_UPDATECLIENT");
-        Map<String,Object> inParamMap = new HashMap<String,Object>();
-        inParamMap.put("id", client.getId());
-        inParamMap.put("name", client.getName());
-        inParamMap.put("contactName", client.getContactName());
+        Connection connection = dataSource.getConnection();
+        String sqlUpdate = "{call OSS_CLIENT_UPDATECLIENT (?,?,?)}";
 
-        SqlParameterSource in = new MapSqlParameterSource(inParamMap);
-        simpleJdbCall.execute(in);
+        CallableStatement statement = connection.prepareCall(sqlUpdate);
+
+        statement.setString(1, client.getId());
+        statement.setString(2, client.getName());
+        statement.setString(3, client.getContactName());
+
+        statement.execute();
+        statement.close();
+        connection.close();
+
+        return client;
     }
 
 
@@ -91,7 +97,7 @@ public class ClientDao {
 
     class ClientRowMapper implements RowMapper<Client>{
 
-        @Nullable
+        //@Nullable
         @Override
         public Client mapRow(ResultSet rs, int rowNum) throws SQLException {
 
