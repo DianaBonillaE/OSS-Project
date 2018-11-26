@@ -44,24 +44,24 @@ public class ClientRestController {
         return new ResponseEntity<Client>(clientCreate, HttpStatus.CREATED);
     }
 
-    @PutMapping(value="/updateClient")
+    
+    @PutMapping(value = "/updateClient")
     public ResponseEntity<Client> updateClient(@RequestBody final Client client){
+        Client clientUpdate = null;
 
-        Client clientActual = null;
-        clientDao.updateClient(client);
-        return new ResponseEntity<Client>( clientActual,HttpStatus.OK);
-    }
-
-    /*public ResponseEntity<ModelBrand> updateModelBrand(@RequestBody  final ModelBrand modelBrand){
-        ModelBrand modelBrandUpdate= null;
         try {
-            modelBrandDao.update(modelBrand);
+            clientDao.updateClient(client);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return new ResponseEntity<Client>(clientUpdate, HttpStatus.OK);
+    }
 
-        return new ResponseEntity<ModelBrand>( modelBrandUpdate,HttpStatus.OK);
-    }*/
+    @GetMapping("/getById/{clientId}")
+    public ResponseEntity<Client> clientGetById(@PathVariable("clientId") final String id){
+        Client client = clientDao.findById(id);
+        return new ResponseEntity<Client>(client, HttpStatus.OK);
+    }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Client> deleteClient(@PathVariable("id") final String id){
