@@ -10,10 +10,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Repository
@@ -79,12 +81,13 @@ public class WorkOrderDao {
 
     public WorkOrder findById(int id) {
 
-        String sqlProcedure = "execute OSS_MeasurementUnit_FindById " + id;
+        String sqlProcedure = "execute OSS_WorkOrder_FindById " + id;
         WorkOrder workOrder= this.jdbcTemplate.queryForObject(sqlProcedure, new WorkOrderRowMapper());
         return workOrder;
 
     }
 
+   // @Transactional
     public void updateWorkOrder(int id, WorkOrder workOrder) throws SQLException {
 
         Connection connection = dataSource.getConnection();
@@ -94,26 +97,44 @@ public class WorkOrderDao {
         statement.setString(2, workOrder.getDescription());
         statement.execute();
         statement.close();
-        
-        if(changesVerify(workOrder.getEmployees())){
-        	
-        	
-        }
+        connection.close();        
+       changesVerify(workOrder.getId(),workOrder.getEmployees());
         
         
-        connection.close();
+        
     }
     
-    private boolean changesVerify(List<Employee> employees){
+    private boolean changesVerify(int idWorkOrder,List<Employee> employees) throws SQLException{
+    	List<Employee> employeesbd=getEmployeesWorkOrder(idWorkOrder);    
     	
+    	boolean bandera=false;
+    	if(!employees.toString().equals(employeesbd.toString())){
+    		bandera=true;    		
+    	}
     	
-    	
-    	/*boolean bandera=false;
-    	for (Employee employee : employees) {
-			if(t)
-		}*/
-    	
-    	return false;
+    	if(bandera){
+    		  System.err.println("entro");              
+    		//primero elimino todos los empleados de esa orden de trabajo
+    		Connection connection = dataSource.getConnection();
+            String sqlUpdate = "{call OSS_WorkOrder_Employee_Delete_All (?)}";
+            CallableStatement statement = connection.prepareCall(sqlUpdate);
+            statement.setInt(1, idWorkOrder);
+            statement.execute();
+            statement.close();
+            
+            //Luego agrego los nuevos                        
+            String sqlUpdate2 = "{call OSS_WorkOrder_Employee_Insert (?,?)}";
+            for (Employee employee : employees) {
+            	CallableStatement statement2 = connection.prepareCall(sqlUpdate2);
+                statement2.setInt(1, idWorkOrder);
+                statement2.setString(2, employee.getId());
+                statement2.execute();
+                statement2.close();
+			}
+          
+    	}
+    	    	    	
+    	return bandera;
     }
 
     public List<WorkOrder> getAll() {
@@ -124,7 +145,7 @@ public class WorkOrderDao {
     public void deleteWorkOrder(int id) throws SQLException {
 
         Connection connection = dataSource.getConnection();
-        String sqlDelete = "{call OSS_WorkOrder_Delete (?)}";
+        String sqlDelete = "{call OSS_Work_Order_Delete (?)}";
 
         CallableStatement statement = connection.prepareCall(sqlDelete);
         statement.setInt(1, id);
@@ -134,6 +155,7 @@ public class WorkOrderDao {
         connection.close();
     }
     
+   
     
 
     public List<Employee> getEmployeesWorkOrder(int id) throws SQLException {
