@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.SQLException;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600)
 @RestController
 @RequestMapping("/api/client")
 public class ClientRestController {
@@ -44,7 +45,8 @@ public class ClientRestController {
         return new ResponseEntity<Client>(clientCreate, HttpStatus.CREATED);
     }
 
-    
+
+
     @PutMapping(value = "/updateClient")
     public ResponseEntity<Client> updateClient(@RequestBody final Client client){
         Client clientUpdate = null;

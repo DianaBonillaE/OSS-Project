@@ -63,6 +63,7 @@ public class ClientDao {
         return client;
     }
 
+
     public Client updateClient(Client client) throws SQLException{
 
         Connection connection = dataSource.getConnection();
