@@ -31,7 +31,6 @@ public class MeasurementUnitRestController {
         int id;
         String confirm;
         try {
-            System.out.println(measurementUnitCreate);
             id = measurementUnitDao.addMeasurementUnit(measurementUnitCreate);
         } catch (Exception e) {
             return null;

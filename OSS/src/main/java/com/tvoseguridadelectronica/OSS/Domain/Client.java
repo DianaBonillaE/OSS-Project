@@ -41,4 +41,11 @@ public class Client {
     public void setContactName(String contactName) {
         this.contactName = contactName;
     }
+
+	@Override
+	public String toString() {
+		return "Client [id=" + id + ", name=" + name + ", contactName=" + contactName + "]";
+	}
+    
+    
 }
