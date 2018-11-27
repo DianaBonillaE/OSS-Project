@@ -1,6 +1,8 @@
 package com.tvoseguridadelectronica.OSS.Repository;
 
 import com.tvoseguridadelectronica.OSS.Domain.Client;
+import com.tvoseguridadelectronica.OSS.Domain.Employee;
+import com.tvoseguridadelectronica.OSS.Domain.Role;
 import com.tvoseguridadelectronica.OSS.Domain.WorkOrder;
 import com.tvoseguridadelectronica.OSS.Domain.WorkOrderType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -21,12 +24,20 @@ public class WorkOrderDao {
     private DataSource dataSource;
     ClientDao clientDao;
     WorkOrderTypeDao workOrderTypeDao;
+    RoleDao roleDao;
+
 
     @Autowired
     public void setClientDao(ClientDao clientDao) {
         this.clientDao = clientDao;
     }
 
+
+    @Autowired
+    public void setRoleDao(RoleDao roleDao){
+    	this.roleDao=roleDao;
+    }
+    
     @Autowired
     public void setWorkOrderTypeDao(WorkOrderTypeDao workOrderTypeDao) {
         this.workOrderTypeDao = workOrderTypeDao;
@@ -74,16 +85,35 @@ public class WorkOrderDao {
 
     }
 
-    public void updateWorkOrder(int id, String description) throws SQLException {
+    public void updateWorkOrder(int id, WorkOrder workOrder) throws SQLException {
 
         Connection connection = dataSource.getConnection();
         String sqlUpdate = "{call OSS_WorkOrder_Update (?,?)}";
         CallableStatement statement = connection.prepareCall(sqlUpdate);
         statement.setInt(1, id);
-        statement.setString(2, description);
+        statement.setString(2, workOrder.getDescription());
         statement.execute();
         statement.close();
+        
+        if(changesVerify(workOrder.getEmployees())){
+        	
+        	
+        }
+        
+        
         connection.close();
+    }
+    
+    private boolean changesVerify(List<Employee> employees){
+    	
+    	
+    	
+    	/*boolean bandera=false;
+    	for (Employee employee : employees) {
+			if(t)
+		}*/
+    	
+    	return false;
     }
 
     public List<WorkOrder> getAll() {
@@ -103,19 +133,47 @@ public class WorkOrderDao {
         statement.close();
         connection.close();
     }
+    
+    
 
-    class WorkOrderRowMapper implements RowMapper<WorkOrder> {
+    public List<Employee> getEmployeesWorkOrder(int id) throws SQLException {
+
+          String sqlProcedure = "execute OSS_WorkOrder_GetALLEmployees "+id;
+          return this.jdbcTemplate.query(sqlProcedure, new EmployeeRowMapper());
+      }
+
+
+class WorkOrderRowMapper implements RowMapper<WorkOrder> {
 
         @Override
         public WorkOrder mapRow(ResultSet resultSet, int i) throws SQLException {
             WorkOrder workOrder = new WorkOrder();
-            workOrder.setId(resultSet.getInt("id"));
+             workOrder.setId(resultSet.getInt("id"));
+            List<Employee> employees= getEmployeesWorkOrder(workOrder.getId());
+            workOrder.setEmployees(employees);
             workOrder.setDescription(resultSet.getString("description"));
             Client client = clientDao.findById(resultSet.getString("client_id"));
             workOrder.setClient(client);
             WorkOrderType workOrderType = workOrderTypeDao.findById(resultSet.getInt("work_order_type_id"));
             workOrder.setWorkOrderType(workOrderType);
             return workOrder;
+        }
+    }
+
+    class EmployeeRowMapper implements RowMapper<Employee> {
+
+        @Override
+        public Employee mapRow(ResultSet resultSet, int i) throws SQLException {
+            Employee employee = new Employee();
+            employee.setId(resultSet.getString("id"));
+            employee.setName(resultSet.getString("name"));
+            employee.setLastName(resultSet.getString("last_name"));
+            employee.setPosition(resultSet.getString("position"));
+            Role role = roleDao.findById(resultSet.getInt("employee_role_id"));
+            employee.setRole(role);
+            //employee.setUsername(resultSet.getString("username"));
+            //employee.setPassword(resultSet.getString("password"));
+            return employee;
         }
     }
 }

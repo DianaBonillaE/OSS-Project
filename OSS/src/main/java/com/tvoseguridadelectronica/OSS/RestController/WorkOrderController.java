@@ -58,9 +58,9 @@ public class WorkOrderController {
     @PutMapping(value = "/{id}")
     public ResponseEntity<WorkOrder> updateWorkOrder(
             @PathVariable("id") final int id,
-            @PathVariable("id")WorkOrder workOrder) throws SQLException {
+            @RequestBody final WorkOrder workOrder) throws SQLException {
 
-        workOrderDao.updateWorkOrder(id, workOrder.getDescription());
+        workOrderDao.updateWorkOrder(id, workOrder);
 
         WorkOrder workOrderNew = (WorkOrder) workOrderDao.findById(id);
 
@@ -68,7 +68,7 @@ public class WorkOrderController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<WorkOrder> deleteMeasurementUnit(@PathVariable("id") final int id) {
+    public ResponseEntity<WorkOrder> deleteWorkOrder(@PathVariable("id") final int id) {
 
         try {
            workOrderDao.deleteWorkOrder(id);
