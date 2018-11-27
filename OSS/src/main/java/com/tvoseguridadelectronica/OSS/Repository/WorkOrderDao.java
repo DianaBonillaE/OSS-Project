@@ -57,7 +57,7 @@ public class WorkOrderDao {
     public void addEmployees(int id,String idEmployee) throws SQLException {
 
         Connection connection = dataSource.getConnection();
-        String sqlInsert = "{call OSS_WorkOrderEmployee_Insert (?,?,?,?)}";
+        String sqlInsert = "{call OSS_WorkOrderEmployee (?,?)}";
         CallableStatement statement = connection.prepareCall(sqlInsert);
         statement.setInt(1,id);
         statement.setString(2,idEmployee);
