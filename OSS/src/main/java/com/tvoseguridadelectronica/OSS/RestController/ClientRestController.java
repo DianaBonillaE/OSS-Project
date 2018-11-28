@@ -59,7 +59,7 @@ public class ClientRestController {
         return new ResponseEntity<Client>(clientUpdate, HttpStatus.OK);
     }
 
-    @GetMapping("/getById/{clientId}")
+    @GetMapping("/{clientId}")
     public ResponseEntity<Client> clientGetById(@PathVariable("clientId") final String id){
         Client client = clientDao.findById(id);
         return new ResponseEntity<Client>(client, HttpStatus.OK);
