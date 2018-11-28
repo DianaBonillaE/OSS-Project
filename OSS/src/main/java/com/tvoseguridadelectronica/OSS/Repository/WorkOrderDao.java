@@ -141,6 +141,11 @@ public class WorkOrderDao {
         String sqlProcedure = "execute OSS_WorkOrder_GetAll";
         return this.jdbcTemplate.query(sqlProcedure, new WorkOrderRowMapper());
     }
+    
+    public List<WorkOrder> getAllWithoutEmployee() {
+        String sqlProcedure = "execute OSS_WorkOrder_GetAll";
+        return this.jdbcTemplate.query(sqlProcedure, new WorkOrderRowMapper2());
+    }
 
     public void deleteWorkOrder(int id) throws SQLException {
 
@@ -181,6 +186,23 @@ class WorkOrderRowMapper implements RowMapper<WorkOrder> {
             return workOrder;
         }
     }
+
+class WorkOrderRowMapper2 implements RowMapper<WorkOrder> {
+
+    @Override
+    public WorkOrder mapRow(ResultSet resultSet, int i) throws SQLException {
+        WorkOrder workOrder = new WorkOrder();
+         workOrder.setId(resultSet.getInt("id"));
+       // List<Employee> employees= getEmployeesWorkOrder(workOrder.getId());
+        //workOrder.setEmployees(employees);
+        workOrder.setDescription(resultSet.getString("description"));
+        Client client = clientDao.findById(resultSet.getString("client_id"));
+        workOrder.setClient(client);
+        WorkOrderType workOrderType = workOrderTypeDao.findById(resultSet.getInt("work_order_type_id"));
+        workOrder.setWorkOrderType(workOrderType);
+        return workOrder;
+    }
+}
 
     class EmployeeRowMapper implements RowMapper<Employee> {
 

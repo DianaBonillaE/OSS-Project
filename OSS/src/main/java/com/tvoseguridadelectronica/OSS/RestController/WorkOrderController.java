@@ -1,6 +1,7 @@
 package com.tvoseguridadelectronica.OSS.RestController;
 
 import com.tvoseguridadelectronica.OSS.Domain.WorkOrder;
+import com.tvoseguridadelectronica.OSS.Domain.WorkOrderType;
 import com.tvoseguridadelectronica.OSS.Repository.WorkOrderDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -54,6 +55,12 @@ public class WorkOrderController {
         List<WorkOrder> workOrderList = workOrderDao.getAll();
         return new ResponseEntity<List<WorkOrder>>(workOrderList, HttpStatus.OK);
     }
+    
+    @GetMapping("/withoutEmployee/")
+    public ResponseEntity<List<WorkOrder>> getAllWithoutEmployee() {
+        List<WorkOrder> workOrderList = workOrderDao.getAllWithoutEmployee();
+        return new ResponseEntity<List<WorkOrder>>(workOrderList, HttpStatus.OK);
+    }
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<WorkOrder> updateWorkOrder(
@@ -67,6 +74,13 @@ public class WorkOrderController {
         return new ResponseEntity<WorkOrder>(workOrderNew, HttpStatus.OK);
     }
 
+    
+    @GetMapping("/find/{id}")
+    public ResponseEntity<WorkOrder> searchById(@PathVariable("id") final int id) {
+        WorkOrder workOrder = workOrderDao.findById(id);
+        return new ResponseEntity<WorkOrder>(workOrder, HttpStatus.OK);
+    }
+    
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<WorkOrder> deleteWorkOrder(@PathVariable("id") final int id) {
 
