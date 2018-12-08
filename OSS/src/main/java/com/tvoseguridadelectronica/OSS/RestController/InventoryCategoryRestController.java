@@ -1,6 +1,7 @@
 package com.tvoseguridadelectronica.OSS.RestController;
 
 import com.tvoseguridadelectronica.OSS.Domain.InventoryCategory;
+import com.tvoseguridadelectronica.OSS.Domain.MeasurementUnit;
 import com.tvoseguridadelectronica.OSS.Repository.InventoryCategoryDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,8 +19,6 @@ public class InventoryCategoryRestController {
 
 	@Autowired
     private InventoryCategoryDao inventorycategoryDao;
-
-   
 
     @GetMapping("/")
     public ResponseEntity<List<InventoryCategory>> listAllCategories(){
@@ -58,6 +57,12 @@ public class InventoryCategoryRestController {
             e.printStackTrace();
         }
         return new ResponseEntity<InventoryCategory>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/find/{id}")
+    public ResponseEntity<InventoryCategory> searchById(@PathVariable("id") final int id) {
+        InventoryCategory inventoryCategory = inventorycategoryDao.findById(id);
+        return new ResponseEntity<InventoryCategory>(inventoryCategory, HttpStatus.OK);
     }
 
 
