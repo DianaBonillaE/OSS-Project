@@ -34,7 +34,6 @@ public class WorkOrderDao {
         this.clientDao = clientDao;
     }
 
-
     @Autowired
     public void setRoleDao(RoleDao roleDao){
     	this.roleDao=roleDao;
@@ -51,20 +50,29 @@ public class WorkOrderDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public int addWorkOrder(WorkOrder workOrder) throws SQLException {
+    public int addWorkOrder(WorkOrder workOrder)  {
 
-        Connection connection = dataSource.getConnection();
-        String sqlInsert = "{call OSS_WorkOrder_Insert (?,?,?,?)}";
-        CallableStatement statement = connection.prepareCall(sqlInsert);
-        statement.registerOutParameter(1, Types.INTEGER);
-        statement.setString(2, workOrder.getDescription());
-        statement.setString(3, workOrder.getClient().getId());
-        statement.setInt(4, workOrder.getWorkOrderType().getId());
-        statement.execute();
-        int id = statement.getInt("id");
-        statement.close();
-        connection.close();
-        return id;
+        Connection connection = null;
+        try {
+            connection = dataSource.getConnection();
+            String sqlInsert = "{call OSS_WorkOrder_Insert (?,?,?,?,?)}";
+            CallableStatement statement = connection.prepareCall(sqlInsert);
+            statement.registerOutParameter(1, Types.INTEGER);
+            statement.setString(2, workOrder.getDescription());
+            statement.setString(3, workOrder.getClient().getId());
+            statement.setInt(4, workOrder.getWorkOrderType().getId());
+           statement.setString(5,workOrder.getDate());
+            statement.execute();
+            int id = statement.getInt("id");
+            statement.close();
+            connection.close();
+            return id;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
     }
 
     public void addEmployees(int id,String idEmployee) throws SQLException {
@@ -91,17 +99,16 @@ public class WorkOrderDao {
     public void updateWorkOrder(int id, WorkOrder workOrder) throws SQLException {
 
         Connection connection = dataSource.getConnection();
-        String sqlUpdate = "{call OSS_WorkOrder_Update (?,?)}";
+        String sqlUpdate = "{call OSS_WorkOrder_Update (?,?,?)}";
         CallableStatement statement = connection.prepareCall(sqlUpdate);
         statement.setInt(1, id);
         statement.setString(2, workOrder.getDescription());
+        statement.setString(3,workOrder.getDate());
         statement.execute();
         statement.close();
         connection.close();        
-       changesVerify(workOrder.getId(),workOrder.getEmployees());
-        
-        
-        
+       //changesVerify(workOrder.getId(),workOrder.getEmployees());
+
     }
     
     private boolean changesVerify(int idWorkOrder,List<Employee> employees) throws SQLException{
@@ -131,9 +138,8 @@ public class WorkOrderDao {
                 statement2.execute();
                 statement2.close();
 			}
-          
-    	}
-    	    	    	
+              	}
+
     	return bandera;
     }
 
@@ -159,9 +165,6 @@ public class WorkOrderDao {
         statement.close();
         connection.close();
     }
-    
-   
-    
 
     public List<Employee> getEmployeesWorkOrder(int id) throws SQLException {
 
@@ -183,6 +186,7 @@ class WorkOrderRowMapper implements RowMapper<WorkOrder> {
             workOrder.setClient(client);
             WorkOrderType workOrderType = workOrderTypeDao.findById(resultSet.getInt("work_order_type_id"));
             workOrder.setWorkOrderType(workOrderType);
+            workOrder.setDate(resultSet.getString("date"));
             return workOrder;
         }
     }
@@ -200,6 +204,7 @@ class WorkOrderRowMapper2 implements RowMapper<WorkOrder> {
         workOrder.setClient(client);
         WorkOrderType workOrderType = workOrderTypeDao.findById(resultSet.getInt("work_order_type_id"));
         workOrder.setWorkOrderType(workOrderType);
+        workOrder.setDate(resultSet.getString("date"));
         return workOrder;
     }
 }
@@ -220,4 +225,6 @@ class WorkOrderRowMapper2 implements RowMapper<WorkOrder> {
             return employee;
         }
     }
+
+
 }

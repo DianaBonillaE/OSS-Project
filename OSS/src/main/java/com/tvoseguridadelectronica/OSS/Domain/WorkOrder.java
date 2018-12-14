@@ -9,13 +9,15 @@ public class WorkOrder {
     WorkOrderType workOrderType;
     Client client;
     List<Employee> employees;
+    String date;
 
-    public WorkOrder(int id, String description, WorkOrderType workOrderType, Client client, List<Employee> employees) {
+    public WorkOrder(int id, String description, WorkOrderType workOrderType, Client client, List<Employee> employees, String date) {
         this.id = id;
         this.description = description;
         this.workOrderType = new WorkOrderType();
         this.client = new Client();
         this.employees = employees;
+        this.date=date;
     }
 
     public WorkOrder() {
@@ -61,6 +63,14 @@ public class WorkOrder {
         this.employees = employees;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
     @Override
     public String toString() {
         return "WorkOrder{" +
@@ -68,7 +78,7 @@ public class WorkOrder {
                 ", description='" + description + '\'' +
                 ", workOrderType=" + workOrderType +
                 ", client=" + client +
-                ", employees=" + employees +
+                ", date=" +date +
                 '}';
     }
 }
