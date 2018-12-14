@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-//@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600) //direccion de angular
+@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600) //direccion de angular
 @RestController
 @RequestMapping({"/api/reports"})
 public class ReportsController{
@@ -23,11 +23,16 @@ public class ReportsController{
     }
 
     @PostMapping("/")
-    public ResponseEntity<List<ReportWoDate>> getAll(
+    public ResponseEntity<List<ReportWoDate>> getConsulta(
             @RequestBody final ReportWoDate consulta) {
-        System.out.println("******** "+consulta);
         List<ReportWoDate> reportWoDates = reportsDao.searchWoDate(consulta.getNameClient(),consulta.getDate());
         return new ResponseEntity<List<ReportWoDate>>(reportWoDates, HttpStatus.OK);
     }
 
+    @GetMapping("/")
+ public ResponseEntity<List<ReportWoDate>> getAllClientsWo()    {
+
+        List<ReportWoDate> reportWoDates = reportsDao.getAllClientsWo();
+      return new ResponseEntity<List<ReportWoDate>>(reportWoDates, HttpStatus.OK);
+   }
 }
