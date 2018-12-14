@@ -51,6 +51,16 @@ public class EmployeeDao {
         String sqlProcedure = "execute OSS_Employee_Find '%" + name + "%'";
         return this.jdbcTemplate.query(sqlProcedure, new EmployeeRowMapper());
     }
+    
+    
+    public Employee findByLogin(String username) {
+
+        String sqlProcedure = "execute OSS_Employee_FindByUsername '%" + username + "%'";
+        return this.jdbcTemplate.queryForObject(sqlProcedure, new EmployeeRowMapper());
+    }
+    
+    
+    
 
     public Employee findById(int id) {
 

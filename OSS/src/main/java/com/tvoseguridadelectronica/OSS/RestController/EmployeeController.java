@@ -7,12 +7,13 @@ import com.tvoseguridadelectronica.OSS.Repository.RoleDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600) //direccion de angular
+//@CrossOrigin(origins = "http://localhost:4200",maxAge = 3600) //direccion de angular
 @RestController
 @RequestMapping({"/api/employee"})
 public class EmployeeController {
@@ -35,6 +36,9 @@ public class EmployeeController {
             @RequestBody final Employee employee) {
 
         Role role = roleDao.findById(employee.getRole().getId());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		String hashedPassword = passwordEncoder.encode(employee.getPassword());
+		employee.setPassword(hashedPassword);
 
         Employee employeeCreate = new Employee(employee.getId(),employee.getName(),
                 employee.getLastName(),employee.getPosition(),role,employee.getUsername(),
@@ -70,6 +74,11 @@ public class EmployeeController {
     public ResponseEntity<Employee> updateEmployee(
             @PathVariable("id") final int id,
             @RequestBody final Employee employee) throws SQLException {
+    	
+    	Role role = roleDao.findById(employee.getRole().getId());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		String hashedPassword = passwordEncoder.encode(employee.getPassword());
+		employee.setPassword(hashedPassword);
 
         employeeDao.updateEmployee(employee);
 
