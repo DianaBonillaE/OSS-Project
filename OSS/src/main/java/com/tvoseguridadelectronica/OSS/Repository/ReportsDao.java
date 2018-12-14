@@ -29,13 +29,13 @@ public class ReportsDao {
 
     public List<ReportWoDate> searchWoDate(String name, String date){
 
-        Connection connection = null;
-        String sqlProcedure = null;
-
-
             String consulta ="execute OSS_searchWoDate '"+name+"', '"+date+"'";
 
+        return this.jdbcTemplate.query(consulta, new ReportWoDateRowMapper());
+    }
 
+    public List<ReportWoDate> getAllClientsWo(){
+        String consulta = "execute OSS_getAllWoClients";
         return this.jdbcTemplate.query(consulta, new ReportWoDateRowMapper());
     }
 
